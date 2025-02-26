@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: db1
+    networks:
+      - harsh
+
+    volumes:
+      - /dbdata:/var/lib/mysql
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=redhat
+      - MYSQL_DATABASE=myblog
+      - MYSQL_USER=harsh
+      - MYSQL_PASSWORD=redhat
+
+  wp:
+    depends_on:
+      - db
+    image: wordpress:latest
+    container_name: wp1
+    networks:
+      - harsh
+    ports:
+      - 8080:80
+    environment:
+      - WORDPRESS_DB_HOST=db1
+      - WORDPRESS_DB_USER=harsh
+      - WORDPRESS_DB_PASSWORD=redhat
+      - WORDPRESS_DB_NAME=myblog
+
+networks:
+  harsh:
+    driver: bridge
